@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>HAKER ANIME | الإمبراطورية الملكية</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: radial-gradient(circle at 10% 20%, #0a0f1a, #000000);
+            font-family: 'Segoe UI', 'Tahoma', 'Courier New', monospace;
+            color: #f0f0f0;
+            padding: 15px;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        /* وضع الساحر */
+        body.wizard {
+            background: radial-gradient(circle at 30% 10%, #1a0033, #0a0015);
+            color: #ffccff;
+        }
+        body.wizard .anime-card {
+            background: rgba(255, 0, 255, 0.15);
+            border-color: #ff00ff;
+            box-shadow: 0 0 15px #ff00ff;
+        }
+        body.wizard .header {
+            border-color: #ff44ff;
+            box-shadow: 0 0 30px #ff44ff;
+        }
+        body.wizard .title {
+            background: linear-gradient(135deg, #ff66ff, #00ffff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* خلفية نجوم متحركة */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: twinkle 2s infinite alternate;
+        }
+        @keyframes twinkle {
+            0% { opacity: 0.2; transform: scale(1);}
+            100% { opacity: 1; transform: scale(1.5);}
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* شاشة الترحيب الملكية */
+        .splash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, #00aa33, #000000);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            animation: fadeOut 3s forwards;
+        }
+        @keyframes fadeOut {
+            0% { opacity: 1; visibility: visible; }
+            80% { opacity: 1; }
+            100% { opacity: 0; visibility: hidden; }
+        }
+        .splash h1 {
+            font-size: 2.8rem;
+            background: linear-gradient(135deg, gold, #ff8800);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px orange;
+        }
+
+        /* الهيدر */
+        .header {
+            text-align: center;
+            background: rgba(0,0,0,0.65);
+            backdrop-filter: blur(12px);
+            border-radius: 60px;
+            padding: 20px 15px;
+            margin-bottom: 30px;
+            border: 1px solid #ffaa33;
+            box-shadow: 0 0 25px rgba(255, 170, 0, 0.4);
+        }
+        .title {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #ffcc44, #ff8844);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 2px;
+        }
+        .sub {
+            color: #ffaa66;
+            font-size: 0.8rem;
+            margin-top: 6px;
+        }
+
+        /* شريط البحث */
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            justify-content: center;
+        }
+        .search-bar input {
+            flex: 1;
+            padding: 12px 20px;
+            border-radius: 60px;
+            border: none;
+            background: #1e1e2a;
+            color: white;
+            font-size: 1rem;
+        }
+        .search-bar button {
+            background: #ffaa33;
+            border: none;
+            padding: 0 20px;
+            border-radius: 60px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* أزرار التصنيف */
+        .category-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .cat-btn {
+            background: #1f1f2f;
+            border: 1px solid #ffaa33;
+            padding: 8px 18px;
+            border-radius: 40px;
+            color: #ffaa33;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .cat-btn.active, .cat-btn:hover {
+            background: #ffaa33;
+            color: black;
+            box-shadow: 0 0 12px gold;
+        }
+
+        /* شبكة الأنمي */
+        .anime-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        .anime-card {
+            background: rgba(25, 25, 45, 0.85);
+            backdrop-filter: blur(4px);
+            border-radius: 32px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: 0.25s;
+            border: 1px solid #2a2a3a;
+        }
+        .anime-card:hover {
+            transform: translateY(-8px);
+            border-color: #ffaa33;
+            box-shadow: 0 0 20px rgba(255, 170, 0, 0.6);
+        }
+        .anime-card img {
+            width: 100%;
+            height: 270px;
+            object-fit: cover;
+        }
+        .anime-card h3 {
+            padding: 12px;
+            font-size: 1rem;
+            text-align: center;
+            color: #ffdd99;
+        }
+        .anime-card p {
+            padding: 0 12px 12px;
+            font-size: 0.75rem;
+            color: #aaa;
+        }
+
+        /* زر وضع الساحر */
+        .wizard-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, magenta, purple);
+            border: none;
+            border-radius: 50px;
+            padding: 12px 18px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 200;
+            box-shadow: 0 0 12px magenta;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            font-size: 0.7rem;
+            color: #777;
+            border-top: 1px solid #333;
+        }
+        @media (max-width: 550px) {
+            .anime-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+            .anime-card img { height: 210px; }
+            .title { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+<div class="splash">
+    <h1>🔥 HAKER AHMED 🔥</h1>
+    <p style="color: gold;">حاكم المجال البرنس حمودي</p>
+    <p style="color: #ffaa66;">إمبراطورية الأنمي الخرافية | تحديث فوري للحلقات</p>
+</div>
+
+<div class="container">
+    <div class="header">
+        <div class="title">🕸 HAKER ANIME 🕸</div>
+        <div class="sub">أكثر من 20,000 أنمي | جودة 4K | أحدث الحلقات فور نزولها</div>
+    </div>
+
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="🔍 ابحث عن أنمي (عربي/إنجليزي)...">
+        <button id="searchBtn">بحث</button>
+    </div>
+
+    <div class="category-buttons" id="catButtons">
+        <button class="cat-btn active" data-cat="trending">🔥 رائج الآن</button>
+        <button class="cat-btn" data-cat="top">🏆 الأعلى تقييمًا</button>
+        <button class="cat-btn" data-cat="shonen">⚔️ شونين</button>
+        <button class="cat-btn" data-cat="romance">💖 رومانسية</button>
+        <button class="cat-btn" data-cat="action">🎬 أكشن</button>
+        <button class="cat-btn" data-cat="fantasy">🧙 فانتازيا</button>
+        <button class="cat-btn" data-cat="recently-updated">🔄 أحدث الحلقات</button>
+    </div>
+
+    <div class="anime-grid" id="animeGrid">
+        <div style="text-align:center; padding:50px;">⏳ جلب أقوى الأنميات وأحدثها...</div>
+    </div>
+
+    <div class="footer">
+        © 2099 - حاكم المجال البرنس حمودي HAKER AHMED | جميع الحقوق محفوظة<br>
+        💀 تحديث فوري للحلقات | مميزات حصرية غير موجودة في أي تطبيق ثاني 💀
+    </div>
+</div>
+
+<button class="wizard-btn" id="wizardBtn">🧙 وضع الساحر</button>
+
+<script>
+    // ======================== نجوم متحركة ========================
+    function createStars() {
+        const starsDiv = document.getElementById('stars');
+        for (let i = 0; i < 250; i++) {
+            let star = document.createElement('div');
+            star.classList.add('star');
+            let size = Math.random() * 3 + 1;
+            star.style.width = size + 'px';
+            star.style.height = size + 'px';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDuration = Math.random() * 3 + 1 + 's';
+            starsDiv.appendChild(star);
+        }
+    }
+    createStars();
+
+    // ======================== وضع الساحر ========================
+    let wizardMode = false;
+    document.getElementById('wizardBtn').addEventListener('click', () => {
+        wizardMode = !wizardMode;
+        if (wizardMode) {
+            document.body.classList.add('wizard');
+            document.getElementById('wizardBtn').innerHTML = '✨ وضع عادي ✨';
+            alert('🧙 تم تفعيل وضع الساحر! الألوان الخرافية مفعلة.');
+        } else {
+            document.body.classList.remove('wizard');
+            document.getElementById('wizardBtn').innerHTML = '🧙 وضع الساحر';
+        }
+    });
+
+    // ======================== جلب الأنمي من API قوي (Consumet) ========================
+    let currentPage = 1;
+    let currentCategory = 'trending';
+
+    async function fetchAnime(category = 'trending', searchQuery = '', page = 1) {
+        const grid = document.getElementById('animeGrid');
+        grid.innerHTML = '<div style="text-align:center; padding:50px;">⏳ جلب الأنميات الخرافية...</div>';
+        
+        let url = '';
+        if (searchQuery) {
+            url = `https://api.consumet.org/meta/anilist/${encodeURIComponent(searchQuery)}?page=${page}&perPage=24`;
+        } else {
+            if (category === 'trending') url = `https://api.consumet.org/meta/anilist/trending?page=${page}&perPage=24`;
+            else if (category === 'top') url = `https://api.consumet.org/meta/anilist/popular?page=${page}&perPage=24`;
+            else if (category === 'recently-updated') url = `https://api.consumet.org/meta/anilist/recent-episodes?page=${page}&perPage=24`;
+            else url = `https://api.consumet.org/meta/anilist/advanced-search?genres=["${category}"]&page=${page}&perPage=24`;
+        }
+
+        try {
+            let res = await fetch(url);
+            let data = await res.json();
+            let results = data.results || [];
+            if (results.length === 0) {
+                grid.innerHTML = '<div style="text-align:center; padding:50px;">❌ لا توجد أنميات، جرب بحث آخر أو تصنيف مختلف</div>';
+                return;
+            }
+            displayAnime(results);
+        } catch (err) {
+            console.error(err);
+            grid.innerHTML = '<div style="text-align:center; padding:50px;">❌ خطأ في الاتصال، تأكد من نتك أو حاول مجددًا</div>';
+        }
+    }
+
+    function displayAnime(animeList) {
+        const grid = document.getElementById('animeGrid');
+        grid.innerHTML = '';
+        animeList.forEach(anime => {
+            let card = document.createElement('div');
+            card.classList.add('anime-card');
+            let titleText = anime.title?.userPreferred || anime.title || 'بدون عنوان';
+            let episodes = anime.totalEpisodes ? `📺 ${anime.totalEpisodes} حلقة` : '📺 عدد حلقات غير معروف';
+            let rating = anime.rating ? `⭐ ${anime.rating}` : '⭐ لا يوجد تقييم';
+            let imgUrl = anime.image || anime.cover || 'https://via.placeholder.com/210x270?text=No+Image';
+            card.innerHTML = `
+                <img src="${imgUrl}" alt="${titleText}" loading="lazy">
+                <h3>${titleText}</h3>
+                <p>${rating} | ${episodes}</p>
+            `;
+            card.addEventListener('click', () => {
+                // عرض تفاصيل + روابط مشاهدة
+                let msg = `🎬 ${titleText}\n⭐ التقييم: ${anime.rating || 'غير متاح'}\n📅 عدد الحلقات: ${anime.totalEpisodes || 'غير معروف'}\n📖 النوع: ${anime.genres?.join(', ') || 'غير محدد'}\n\n🔗 جارٍ تجهيز رابط المشاهدة...`;
+                alert(msg);
+                // هنا تقدر تضيف نافذة تفتح رابط حلقة مباشرة
+                if (anime.id) {
+                    window.open(`https://gogoanime.llc/category/${anime.id}`, '_blank');
+                }
+            });
+            grid.appendChild(card);
+        });
+    }
+
+    // البحث
+    document.getElementById('searchBtn').addEventListener('click', () => {
+        let query = document.getElementById('searchInput').value.trim();
+        if (query === '') {
+            fetchAnime(currentCategory);
+        } else {
+            fetchAnime('', query);
+        }
+    });
+    document.getElementById('searchInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') document.getElementById('searchBtn').click();
+    });
+
+    // أحداث أزرار التصنيف
+    document.querySelectorAll('.cat-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentCategory = btn.getAttribute('data-cat');
+            document.getElementById('searchInput').value = '';
+            fetchAnime(currentCategory);
+        });
+    });
+
+    // صندوق الكنز اليومي والإشعارات الفورية
+    setTimeout(() => {
+        alert('🎁 صندوق الكنز الملكي: أنمي "Solo Leveling Season 2" الحلقة 1 متاحة الآن بجودة 4K حصرية! 🎁');
+    }, 4000);
+
+    // إشعار دوري (محاكاة التحديث الفوري)
+    setInterval(() => {
+        // إشعار كل 30 ثانية (للتجربة)
+        let notif = document.createElement('div');
+        notif.innerText = '🔔 تحديث فوري: حلقة جديدة من "One Piece" تم إضافتها!';
+        notif.style.position = 'fixed';
+        notif.style.bottom = '80px';
+        notif.style.right = '20px';
+        notif.style.backgroundColor = '#ffaa33';
+        notif.style.color = 'black';
+        notif.style.padding = '12px 18px';
+        notif.style.borderRadius = '50px';
+        notif.style.zIndex = '1000';
+        notif.style.fontWeight = 'bold';
+        document.body.appendChild(notif);
+        setTimeout(() => notif.remove(), 5000);
+    }, 30000);
+
+    // تحميل أولي
+    fetchAnime('trending');
+</script>
+</body>
+</html>
